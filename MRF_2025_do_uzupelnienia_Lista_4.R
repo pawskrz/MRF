@@ -29,10 +29,10 @@ p <- q*((1-(1.05)^(-13))/(1-1.05^(-1)) -1) + f*(1.05)^(-12)
 # Jaka była cena emisyjna tej obligacji?
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 FV <- 10000
-q <- FV*((1.03^2) -1)/2
+q <- FV*0.06/2
 r <- 1.05
-t <- c(1/2, 1, 3/2, 2, 5/2, 3, 7/2, 4)
-p <- q*sum((r)^(-t)) + FV*(r)^(-4)
+t <- c(0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4)
+p <- q*sum(r^(-t)) + FV*(r)^(-4)
 p
 
 
@@ -104,23 +104,15 @@ cat("YTM dla powyższej obligacji wynosi", YTM*100,"%")
 # o wartości nominalnej 10 000 PLN, cenie 9800 PLN oraz kuponach 280 PLN 
 # (w skali roku) płatnych co pół roku. 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+f <- function(r){
+  C <- 140
+  t <- seq(from=0.5, to=8, by=0.5)
+  FV <- 10000
+  P <- 9800
+  return(C*sum((1+r)^(-t)) + FV*(1+r)^(-8) - P)
+}
+YTM <- as.numeric(uniroot(f, c(0, 0.05))[1])
+cat("YTM dla powyższej obligacji wynosi", YTM*100,"%")
 #_______________________________________________________________________________
 #
 #------------------------------Zadanie 4.7--------------------------------------
