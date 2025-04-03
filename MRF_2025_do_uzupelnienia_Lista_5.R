@@ -142,7 +142,7 @@ data$ForwardRate[10]
 # SpotRate      = stopa spot dla n lat (zerokuponowa)
 # ForwardRate   = stopa terminowa dla n-tego roku.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
+data <- read.csv("TermStructure.csv")
 
 
 
