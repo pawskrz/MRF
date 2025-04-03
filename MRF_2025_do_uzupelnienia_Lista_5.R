@@ -143,9 +143,19 @@ data$ForwardRate[10]
 # ForwardRate   = stopa terminowa dla n-tego roku.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 data <- read.csv("TermStructure.csv")
-
-
-
+data$SpotRate <- (data$FV+data$Coupon*(data$Maturity-1)/data$Price)^(1/data$Maturity) -1
+f <- function(YTM){C/YTM + (FV - C/YTM)*(1+YTM)^(-n) - P}
+for(k in 1:20){
+  C <- data$Coupon[k]
+  FV <- data$FV[k]
+  n <- data$Maturity[k]
+  P <- data$Price[k]
+  data$YTM[k] <- uniroot(f, c(-0.1, 0.1))$root
+}
+data$ForwardRate[1] <- data$YTM[1]
+for(k in 2:20){
+  data$ForwardRate[k] <- (1+data$YTM[k])^data$Maturity[k]/(1+data$YTM[k-1])^data$Maturity[k-1] -1
+}
 
 
 
