@@ -15,6 +15,7 @@
 # (d) Jak i w przybliżeniu o ile zmieni się cena obligacji, gdy YTM 
 #     spadnie do 14%?
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+library(FinCal)
 #(a)
 FV <- 1000
 YTM <- 0.15/2
@@ -90,14 +91,12 @@ róż_delta_2
 #
 # Jaka była stopa zwrotu z tej inwestycji?
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+B1_3 <- exp(-(0.04*8 + 0.001/2*8^2))
+B2_3 <- exp(-(0.03*7.5 + 0.0013/2*7.5^2))
 
+stopa_zwrotu <- (B2_3-B1_3)/B1_3
 
-
-
-
-
-
-
+cat("Stopa zwrotu tej inwestycji to", stopa_zwrotu*100, "%")
 
 
 #_______________________________________________________________________________
@@ -117,22 +116,13 @@ róż_delta_2
 # SpotRate    = stopa spot dla n lat (zerokuponowa)
 # ForwardRate = stopa terminowa dla n-tego roku.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+data <- read.csv('TermStructureZero.csv')
+data$SpotRate <- (100/data$Quote)^(1/data$Maturity) -1
+for (n in 20:2){
+  data$ForwardRate[n] <- (1+data$SpotRate[n])^data$Maturity[n]/(1+data$SpotRate[n-1])^data$Maturity[n-1] -1
+}
+data$SpotRate[10]
+data$ForwardRate[10]
 #_______________________________________________________________________________
 #
 #------------------------------Zadanie 5.5--------------------------------------
