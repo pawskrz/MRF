@@ -15,8 +15,8 @@ a <- 1000
 P_0 <- 20
 miu <- 0
 sigma <- 0.03
-L <- -R_1
-
+alpha <- c(0.05, 0.01, 0.005)
+VaR <- -P_0*a * qnorm(alpha) * sigma
 
 
 
@@ -46,15 +46,29 @@ L <- -R_1
 # 
 # (b) nieznany, ale absolutnie ciagły względem miary Lebesgue'a,
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
 VaR <- function(type, year, company, size, alpha=0.05){
-  
-
-  
+  setwd("/Users/mac/Documents/MRF2025")
+  data <- read.csv("Notowania.csv")
+  data[,"Data"] <- as.Date(data[, "Data"], format="%m/%d/%y")
+  cond <- substr(x=data[, "Data"], start=1, stop=4) == as.character(year)
+  data1 <- data[cond,company]
+  data1.returns <- data1[-1]/data1[-length(data1)]-1 
+  data1.log.returns <- log(1+data1.returns)
+  if(type == "a"){
+    library(MASS)
+    #szacujemy parametry rozkładu normalnego
+    p <- fitdistr(x=data1.log.returns, densfun="normal")$estimate
+    v <- qnorm(p=alpha, mean=p[1], sd=p[2])
+  }
+  if(type == "b"){
+    v <- quantile(probs=alpha, data1.log.returns) 
+  }
+    #twierdzenie 2 daje:
+  var <- size*data1[1] * (1-exp(v))
+  return(var)
 }
-
-
+VaR(type="a", year=2009, company="PKOBP", size=1000, alpha=0.05)
+VaR(type="b", year=2009, company="PKOBP", size=1000, alpha=0.05)
 
 #_______________________________________________________________________________
 #
@@ -67,10 +81,18 @@ VaR <- function(type, year, company, size, alpha=0.05){
 #
 # zwracającą wartość CVaR oszacowaną punktowo.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-CVaR <- function(type, year, company, size, alpha=0.05){
-  
-  
+f.podcalkowa <- function(type, year, company, size){
+  val <- function(alpha){
+    return(VaR(type, year, company, size, alpha))
+  }
+  return(val)
 }
 
-
+CVaR <- function(type, year, company, size, alpha=0.05){
+  calka <- integrate(f=f.podcalkowa(type, year, company, size), 
+                     lower=0, 
+                     upper=alpha)$value
+  return(calka/alpha)
+}
+CVaR(type="a", year=2009, company="PKOBP", size=1000, alpha=0.05)
+CVaR(type="b", year=2009, company="PKOBP", size=1000, alpha=0.05)
