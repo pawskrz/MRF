@@ -93,7 +93,7 @@ saldo <- 420 - 401*exp(0.0625) + 15*exp(11/12*0.0575)
 # Jakie są tu możliwości arbitrażu?
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 F.0.4 <- 400*(1 -  1 +exp(0.06*4/12))
-
+#cena teoretyczna wyższa, niż jest w rzeczywistości
 
 
 
@@ -109,11 +109,8 @@ F.0.4 <- 400*(1 -  1 +exp(0.06*4/12))
 # dla wszystkich okresów oblicz cenę srebra w kontraktach futures 
 # z dostawą za 9 miesięcy.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
-
-
-
-
-
-
+T <- 9/12
+r <- 0.05
+t <- c(0,1,2)
+baza.0 <- 15*(1-exp(r*T)) -(0.24/4*sum(exp(-r*t/4)))*exp(r*T)
+F.0.5 <- 15 - baza.0
