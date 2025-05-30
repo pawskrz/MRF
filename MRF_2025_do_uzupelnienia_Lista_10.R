@@ -52,7 +52,7 @@ t.2 <- 9/12
 t.3 <- 10/12
 r <- 0.12
 F.0.a <- (120 - exp(-t.1*r) - 2*exp(-t.2*r))*exp(r*t.3)
-#F(0, T) > S(0)
+#F(0, T) < 131
 # podpunkt b
 zysk <- 131 - 120*exp(r*t.3) + exp(r*(t.3-t.1)) + 2*exp((t.3-t.2)*r)
 
@@ -92,7 +92,7 @@ saldo <- 420 - 401*exp(0.0625) + 15*exp(11/12*0.0575)
 # Jaka jest teoretyczna cena tego kontraktu terminowego? 
 # Jakie są tu możliwości arbitrażu?
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-F.0.4 <- 400*(1 -  1 +exp(0.06*4/12))
+F.0.4 <- 400*(exp(0.06*4/12))
 #cena teoretyczna wyższa, niż jest w rzeczywistości
 
 #_______________________________________________________________________________
@@ -111,4 +111,6 @@ T <- 9/12
 r <- 0.05
 t <- c(0,1,2)
 baza.0 <- 15*(1-exp(r*T)) -(0.24/4*sum(exp(-r*t/4)))*exp(r*T)
+#albo (15 + 0.24/4*sum(exp(-r*t/4)))*exp(r*T)
+(15 + 0.24/4*sum(exp(-r*t/4)))*exp(r*T)
 F.0.5 <- 15 - baza.0
